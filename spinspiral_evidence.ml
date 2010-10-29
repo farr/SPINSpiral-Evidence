@@ -8,7 +8,7 @@ end)
 let prior = ref 1.0
 let spinspiral_outputs = ref []
 let ignore_coordinates = ref 0
-let nmin = ref 2
+let nmin = ref 4
 let nmax = ref 8192
 let nbootstrap = ref 0
 
