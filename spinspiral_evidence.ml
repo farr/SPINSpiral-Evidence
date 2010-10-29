@@ -11,6 +11,7 @@ let ignore_coordinates = ref 0
 let nmin = ref 4
 let nmax = ref 8192
 let nbootstrap = ref 0
+let downsample = ref 1
 
 let options = 
   Arg.align
@@ -23,7 +24,9 @@ let options =
      ("-nmax", Arg.Set_int nmax,
       sprintf "n maximum boxing number (default %d)" !nmax);
      ("-bootstrap", Arg.Set_int nbootstrap,
-      sprintf "n number of bootstrap samples to follow the true sample (default %d)" !nbootstrap)]
+      sprintf "n number of bootstrap samples to follow the true sample (default %d)" !nbootstrap);
+     ("-downsample", Arg.Set_int downsample,
+      sprintf "n number of MCMC samples to read before recording one (default %d)" !downsample)]
 
 let trim_coordinates n samples = 
   Array.map (fun ({Mcmc.value = coords} as samp) -> {samp with Mcmc.value = Array.sub coords 0 (Array.length coords - n)}) samples
@@ -52,7 +55,10 @@ let _ =
   Arg.parse options (fun s -> spinspiral_outputs := s :: !spinspiral_outputs) 
     "spinspiral_evidence.{byte,native} OPTIONS ...";
   Randomize.randomize ();
-  let samples = List.map Read_spinspiral.read_spinspiral_samples !spinspiral_outputs in 
+  let samples = 
+    List.map 
+      (fun file -> Read_spinspiral.read_spinspiral_samples ~downsample:(!downsample) file)
+      !spinspiral_outputs in 
   let samples = 
     if !ignore_coordinates > 0 then 
       List.map (fun samps -> trim_coordinates !ignore_coordinates samps) samples

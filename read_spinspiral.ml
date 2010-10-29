@@ -36,12 +36,15 @@ let read_spinspiral_sample inp =
                         log_prior = log prior};
      value = coords}
 
-let read_spinspiral_samples file = 
+let read_spinspiral_samples ?(downsample = 1) file = 
   let inp = open_in file in 
   let samples = ref [] in 
     ignore_header inp;
     (try 
        while true do 
+         for i = 1 to downsample - 1 do 
+           ignore(read_spinspiral_sample inp)
+         done;
          let samp = read_spinspiral_sample inp in 
            samples := samp :: !samples
        done
