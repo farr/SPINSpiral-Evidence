@@ -22,7 +22,7 @@ let read_array ichan =
        done
      with 
        | End_of_file -> ());
-    Array.of_list !elts
+    Array.of_list (List.rev !elts)
 
 let read_spinspiral_sample inp = 
   let line = input_line inp in 
