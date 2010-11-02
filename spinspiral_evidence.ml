@@ -71,7 +71,7 @@ let trim_coords samples =
 
 let _ = 
   Arg.parse options (fun s -> spinspiral_outputs := s :: !spinspiral_outputs) 
-    "spinspiral_evidence.{byte,native} OPTIONS ...";
+    "spinspiral_evidence.{byte,native} OPTION ... OUTPUT_FILE ...";
   if !ignore_coordinates != 0 && !icoords != [] then begin
     eprintf "Cannot use both -ignore-coordinates and -ignore-coord!\n";
     exit 1
