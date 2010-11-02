@@ -16,19 +16,19 @@ let icoords = ref []
 
 let options = 
   Arg.align
-    [("-prior", Arg.Set_float prior,
+    [("--prior", Arg.Set_float prior,
       sprintf "pr additional prior factor (default %g)" !prior);
-     ("-ignore-coords", Arg.Set_int ignore_coordinates,
+     ("--ignore-coords", Arg.Set_int ignore_coordinates,
       sprintf "n number of coordinates at end of sample to ignore");
-     ("-ignore-coord", Arg.Int (fun i -> icoords := i :: !icoords), 
+     ("--ignore-coord", Arg.Int (fun i -> icoords := i :: !icoords), 
       sprintf "i ignore coordinate i (counting from 0)");
-     ("-nmin", Arg.Set_int nmin, 
+     ("--nmin", Arg.Set_int nmin, 
       sprintf "n minimum boxing number (default %d)" !nmin);
-     ("-nmax", Arg.Set_int nmax,
+     ("--nmax", Arg.Set_int nmax,
       sprintf "n maximum boxing number (default %d)" !nmax);
-     ("-bootstrap", Arg.Set_int nbootstrap,
+     ("--bootstrap", Arg.Set_int nbootstrap,
       sprintf "n number of bootstrap samples to follow the true sample (default %d)" !nbootstrap);
-     ("-downsample", Arg.Set_int downsample,
+     ("--downsample", Arg.Set_int downsample,
       sprintf "n number of MCMC samples to read before recording one (default %d)" !downsample)]
 
 let trim_coordinates n samples = 
