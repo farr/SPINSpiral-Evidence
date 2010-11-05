@@ -1,9 +1,6 @@
 open Printf
 
-module Ev = Evidence.Make(struct
-  type params = float array
-  let to_coords (params : params) = params
-end)
+module Ev = Evidence_common
 
 let prior = ref 1.0
 let spinspiral_outputs = ref []
@@ -34,26 +31,6 @@ let options =
 let trim_coordinates n samples = 
   Array.map (fun ({Mcmc.value = coords} as samp) -> {samp with Mcmc.value = Array.sub coords 0 (Array.length coords - n)}) samples
 
-let bootstrap_sample arr = 
-  let n = Array.length arr in 
-  let res = Array.make n arr.(Random.int n) in   
-    for i = 1 to n - 1 do 
-      res.(i) <- arr.(Random.int n)
-    done;
-    res
-
-let output_ev samples = 
-  let (low,high) = Ev.Kd.bounds_of_objects (Array.to_list samples) in
-  let tree = Ev.kd_tree_of_samples samples low high in 
-  let rec loop n = 
-    if n > !nmax then 
-      ()
-    else begin
-      printf "%d %g\n" n (!prior *. (Ev.evidence_direct_tree ~n:n tree));
-      loop (n*2)
-    end in 
-    loop !nmin
-
 let trim_coords samples = 
   Array.map
     (fun ({Mcmc.value = coords} as samp) -> 
@@ -68,6 +45,12 @@ let trim_coords samples =
           (Array.length coords - 1, []) in 
         {samp with Mcmc.value = Array.of_list new_coords})
     samples          
+
+let rescale_samples samples = 
+  Array.map 
+    (fun ({Mcmc.like_prior = {Mcmc.log_likelihood = ll; log_prior = lp}} as samp) -> 
+      {samp with Mcmc.like_prior = {Mcmc.log_likelihood = ll; log_prior = lp +. (log !prior)}})
+    samples
 
 let _ = 
   Arg.parse options (fun s -> spinspiral_outputs := s :: !spinspiral_outputs) 
@@ -89,8 +72,9 @@ let _ =
     else
       samples in
   let samples = List.fold_left Array.append [| |] samples in
-    output_ev samples;
+  let samples = rescale_samples samples in 
+    Ev.output_ev !nmin !nmax samples;
     if !nbootstrap > 0 then 
       for i = 1 to !nbootstrap do 
-        output_ev (bootstrap_sample samples)
+        Ev.output_ev !nmin !nmax (Ev.bootstrap_sample samples)
       done
