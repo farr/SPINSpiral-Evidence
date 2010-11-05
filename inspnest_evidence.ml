@@ -1,7 +1,7 @@
 module Ev = Evidence_common
 
 let nmin = ref 2
-let nmax = ref 256
+let nmax = ref 512
 let log_l_noise = ref 0.0
 let file = ref ""
 let nbootstrap = ref 1
