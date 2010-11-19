@@ -34,7 +34,7 @@ let prior samp =
       dist = samp.(4) and 
       dec = samp.(6) and 
       inc = samp.(8) in 
-    mc**(-5.0/.6.0) *. dist*.dist *. (cos dec) *. (sin inc) *. prior_norm
+    mc**(-11.0/.6.0) *. dist*.dist *. (cos dec) *. (sin inc) *. prior_norm
 
 let rescale_samples samples = 
   Array.map
