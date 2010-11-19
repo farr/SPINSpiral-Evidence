@@ -1,5 +1,5 @@
 <test> : include
 
-<**/*.{ml,mli,native,byte}> : use_mcmc
+<**/*.{ml,mli,native,byte}> : use_mcmc, debug
 
 <test/*.{ml,mli,native,byte}> : use_unix, use_oUnit
