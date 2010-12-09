@@ -22,7 +22,7 @@ let pi = 3.1415926535897932385
 let prior_norm = 
   let volume = 
     0.247244 *. (* Integral of Mc^(-11/6) over 1 <= M1,M2 <= 34, M1+M2 < 35 *)
-      0.1 *. (* Time range *)
+      0.2 *. (* Time range in common inputs +/-0.1*)
       2.0*.pi *. (* Phi0 *)
       (1.0/.3.0)*.(100.0*.100.0*.100.0) *. (* Distance *)
       4.0*.pi *. (* RA and Dec *)
