@@ -18,7 +18,8 @@ let output_ev nmin nmax samples =
     if n > nmax then 
       ()
     else begin
-      Printf.printf "%d %g\n" n ((Ev.evidence_direct_tree ~n:n tree));
+      let ev = Ev.evidence_direct_tree ~n:n tree in
+      Printf.printf "%d %g %g\n" n ev (log ev);
       loop (n*2)
     end in 
     loop nmin
